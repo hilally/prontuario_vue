@@ -65,7 +65,7 @@
                                     quantdinheiro: 0,
                                     datacadastro: '', 
                                     data_ultimo_login: '', 
-                                    situacao: '',  
+                                    situacao: true,  
                                     endereco: {codigo: 0, cep: '', complemento: ''},
                                     patentes: []},
                 submitted: false,
