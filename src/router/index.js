@@ -3,9 +3,14 @@ import Router from 'vue-router'
 
 import login from  '@/components/Login'
 import home from  '@/components/Home'
-import listJogadores from  '@/components/jogador/List'
-import editJogador   from  '@/components/jogador/Edit'
-import novoJogador   from  '@/components/jogador/Add'
+
+import listPacientes from  '@/components/Paciente/List'
+import editPaciente   from  '@/components/Paciente/Edit'
+import novoPaciente   from  '@/components/Paciente/Add'
+
+import listAtividades from  '@/components/Atividades/List'
+import editAtividade   from  '@/components/Paciente/Edit'
+import novoAtividade   from  '@/components/Paciente/Add'
 
 
 Vue.use(Router)
@@ -14,7 +19,7 @@ const router = new Router({
   mode: "history",
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
       component: home
     },
@@ -24,20 +29,35 @@ const router = new Router({
       component: login
     },
     {
-      path: '/jogadores',
-      name: 'jogadores-list',
-      component: listJogadores    
+      path: '/pacientes',
+      name: 'pacientes-list',
+      component: listPacientes    
     },
     {
-      path: '/jogador/:nickname',
-      name: "jogador-edit",
-      component: editJogador
+      path: '/paciente/:cpf',
+      name: "paciente-edit",
+      component: editPaciente
     },
     {
-      path: '/addjogador',
-      name: "jogador-add",
-      component: novoJogador
-    }
+      path: '/addpaciente',
+      name: "paciente-add",
+      component: novoPaciente
+    },
+    {
+      path: '/atividades',
+      name: 'atividade-list',
+      component: listAtividades  
+    },
+    {
+      path: '/atividade/:id',
+      name: "atividade-edit",
+      component: editAtividade
+    },
+    {
+      path: '/addatividade',
+      name: "atividade-add",
+      component: novoAtividade
+    },
   ]
 })
 

@@ -1,84 +1,91 @@
 <template>
-   <div id="tab_aut">
-            <h3>Autenticacação</h3>
-            <form>
-                <div class="form-outline mb-4">
-                    <label class="form-label" for="inputANickname">Nickname:</label>
-                    <input class="form-control" type="text" v-model="jogador.nickname" id="inputANickname">
-                    </div>
-                
-                <div class="form-outline mb-4">
-                    <label class="form-label" for="inputASenha">Senha:</label>
-                    <input class="form-control" type="password" v-model="jogador.password" id="inputASenha">
-                </div>
-                
-                <button class="btn btn-primary" @click='createJogadorForm()' type="button">Autenticar</button>
-                <button class="btn btn-primary" @click='clearForm()' type="button">Limpar</button>
-            </form>                                      
-        </div>
+  <div id="tab_aut">
+    <h3>Autenticacação</h3>
+    <form>
+      <div class="form-outline mb-4">
+        <label class="form-label" for="input_cpf">CPF:</label>
+        <input
+          class="form-control"
+          type="text"
+          v-model="paciente.cpf"
+          id="input_cpf"
+        />
+      </div>
+
+      <div class="form-outline mb-4">
+        <label class="form-label" for="input_senha">Senha:</label>
+        <input
+          class="form-control"
+          type="senha"
+          v-model="paciente.senha"
+          id="input_senha"
+        />
+      </div>
+
+      <button
+        class="btn btn-primary"
+        @click="create_paciente_form()"
+        type="button"
+      >
+        Autenticar
+      </button>
+      <button class="btn btn-primary" @click="clearForm()" type="button">
+        Limpar
+      </button>
+    </form>
+  </div>
 </template>
 <script>
+import PacienteDataService from "../services/PacienteDataService";
 
-    import JogadorDataService from '../services/JogadorDataService'
+export default {
+  name: "login",
+  data() {
+    return {
+      paciente: { cpf: "", senha: "" }
+    };
+  },
+  methods: {
+    create_paciente_form() {
+      console.log("chamou o createpacienteForm");
 
-    export default{
-     name:'login',
-     data() {
-            return {
-                jogador: {nickname: '', password: ''}
-            }
-        },
-        methods: {
-            createJogadorForm(){
+      const j = { cpf: this.paciente.cpf, senha: this.paciente.senha };
 
-                console.log('chamou o createJogadorForm');
+      PacienteDataService.authenticate(j)
+        .then(response => {
+          console.log(
+            "Retorno do seviço authenticatepaciente",
+            response.status
+          );
+          if (response.status == 201 || response.status == 200) {
+            alert(
+              "Bem vindo(a) " + response.data.nome 
+            );
 
-                const j = {nickname: this.jogador.nickname,
-                           senha: this.jogador.password
-                        }                                    
+            this.setAuthenticated({ cpf: response.data.cpf });
 
-                JogadorDataService.authenticate(j).then(response =>{
+            this.$router.push({ name: "home" });
+          } else if (response.status == 204) {
+            alert("cpf ou senha inválidos ! ");
+          }
 
-                    console.log("Retorno do seviço authenticateJogador", response.status);
-                    if(response.status == 201){
-
-                        alert('Jogador '+ response.data.nickname + ' authenticate com sucesso');       
-                        
-                        this.setAuthenticated({nickname: response.data.nickname})
-                        
-                        this.$router.push({name: "home"});
-
-                    }else if(response.status == 204){
-
-                        alert('Nickname ou senha inválidos ! ');
-                    }
-
-                    this.clearForm();
-                }
-                ).catch(response => {
-
-                    // error callback
-                    alert('Não conectou no serviço authenticateJogador');
-                    console.log(response);
-                });
-
-
-            },
-            clearForm(){
-                this.jogador.nickname = "";
-                this.jogador.password = "";
-            },
-            setAuthenticated(jogador){
-
-                localStorage.setItem('authUser', JSON.stringify(jogador));
-                
-            }
-
-        }
-
+          this.clearForm();
+        })
+        .catch(response => {
+          // error callback
+          alert("Não conectou no serviço authenticatepaciente " + response);
+          // console.log(response);
+        });
+    },
+    clearForm() {
+      this.paciente.cpf = "";
+      this.paciente.senha = "";
+    },
+    setAuthenticated(paciente) {
+      localStorage.setItem("authUser", JSON.stringify(paciente));
     }
+  }
+};
 </script>
-   
-<style scoped>
-    
-</style>
+
+<style scoped></style>
